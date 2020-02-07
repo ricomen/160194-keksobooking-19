@@ -1,8 +1,12 @@
 'use strict';
 var map = document.querySelector('.map');
+var mapPins = map.querySelector('.map__pins')
 var MAP_WIDTH = map.clientWidth;
 var MOCK_LENGTH = 8;
-// var BASE_PHOTOS_URL = ;
+var PinSize = {
+  WIDTH: 50,
+  HEIGHT: 70
+}
 map.classList.remove('map--faded');
 
 var AVATAR_URLS = [
@@ -138,14 +142,38 @@ var getMockItem = function () {
   }
 };
 
-var generateMockArr = function () {
+var getMockArr = function () {
   var arr = [];
-
   for (var i = 0; i < MOCK_LENGTH; i++) {
     arr.push(getMockItem());
   }
-
   return arr;
 }
 
-console.log(generateMockArr());
+var pinTpl = document.querySelector('#pin').content.querySelector('.map__pin');
+
+var getMapPinNode = function (pin) {
+  var pinNode = pinTpl.cloneNode(true);
+  var img = pinNode.querySelector('img');
+  var imgAltText = pin.offer.title;
+  var pinX = (pin.location.x - PinSize.WIDTH/2) + 'px';
+  var pinY = (pin.location.y - PinSize.HEIGHT) + 'px';
+  var imgUrl = pin.author.avatar;
+
+  img.src = imgUrl;
+  img.alt = imgAltText;
+  pinNode.style.left = pinX;
+  pinNode.style.top = pinY;
+
+  return pinNode;
+};
+
+var fillMapOfPins = function(pins) {
+  var fragment = document.createDocumentFragment();
+  for(var i = 0; i < pins.length; i++) {
+    fragment.appendChild(getMapPinNode(pins[i]))
+  }
+  mapPins.appendChild(fragment)
+};
+
+fillMapOfPins(getMockArr());
