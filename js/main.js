@@ -1,12 +1,12 @@
 'use strict';
 var map = document.querySelector('.map');
-var mapPins = map.querySelector('.map__pins')
+var mapPins = map.querySelector('.map__pins');
 var MAP_WIDTH = map.clientWidth;
 var MOCK_LENGTH = 8;
 var PinSize = {
   WIDTH: 50,
   HEIGHT: 70
-}
+};
 map.classList.remove('map--faded');
 
 var AVATAR_URLS = [
@@ -81,17 +81,17 @@ var FEATURES = [
 ];
 
 var PHOTOS = [
-  "http://o0.github.io/assets/images/tokyo/hotel1.jpg",
-  "http://o0.github.io/assets/images/tokyo/hotel2.jpg",
-  "http://o0.github.io/assets/images/tokyo/hotel3.jpg"
-]
+  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+];
 
 var getRandomItemFromArray = function (arr) {
   var index = Math.floor(Math.random() * Math.floor(arr.length));
   return arr[index];
 };
 
-var getRandomOfRangeInt = function (min,max) {
+var getRandomOfRangeInt = function (min, max) {
   var rand = min - 0.5 + Math.random() * (max - min + 1);
   return Math.round(rand);
 };
@@ -100,22 +100,22 @@ var makeCounter = function () {
   var i = 0;
   return function () {
     return i++;
-  }
+  };
 };
 
 var avatarCounter = makeCounter();
 
 var getAvatarUrl = function (arr) {
   return arr[avatarCounter()];
-}
+};
 
 var getArrOfRoomPhotos = function (photos) {
-  var arr = new Array(getRandomOfRangeInt(1,3));
-  for(var i = 0; i < arr.length; i++) {
+  var arr = new Array(getRandomOfRangeInt(1, 3));
+  for (var i = 0; i < arr.length; i++) {
     arr[i] = photos[i];
   }
   return arr;
-}
+};
 
 var getMockItem = function () {
   return {
@@ -139,7 +139,7 @@ var getMockItem = function () {
       x: getRandomOfRangeInt(0, MAP_WIDTH),
       y: getRandomOfRangeInt(130, 630)
     }
-  }
+  };
 };
 
 var getMockArr = function () {
@@ -148,7 +148,7 @@ var getMockArr = function () {
     arr.push(getMockItem());
   }
   return arr;
-}
+};
 
 var pinTpl = document.querySelector('#pin').content.querySelector('.map__pin');
 
@@ -156,7 +156,7 @@ var getMapPinNode = function (pin) {
   var pinNode = pinTpl.cloneNode(true);
   var img = pinNode.querySelector('img');
   var imgAltText = pin.offer.title;
-  var pinX = (pin.location.x - PinSize.WIDTH/2) + 'px';
+  var pinX = (pin.location.x - PinSize.WIDTH / 2) + 'px';
   var pinY = (pin.location.y - PinSize.HEIGHT) + 'px';
   var imgUrl = pin.author.avatar;
 
@@ -168,12 +168,12 @@ var getMapPinNode = function (pin) {
   return pinNode;
 };
 
-var fillMapOfPins = function(pins) {
+var fillMapOfPins = function (pins) {
   var fragment = document.createDocumentFragment();
-  for(var i = 0; i < pins.length; i++) {
-    fragment.appendChild(getMapPinNode(pins[i]))
+  for (var i = 0; i < pins.length; i++) {
+    fragment.appendChild(getMapPinNode(pins[i]));
   }
-  mapPins.appendChild(fragment)
+  mapPins.appendChild(fragment);
 };
 
 fillMapOfPins(getMockArr());
