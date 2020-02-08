@@ -96,17 +96,9 @@ var getRandomFromRange = function (min, max) {
   return Math.round(rand);
 };
 
-var makeCounter = function () {
-  var i = 0;
-  return function () {
-    return i++;
-  };
-};
-
-var avatarCounter = makeCounter();
-
 var getAvatarUrl = function (arr) {
-  return arr[avatarCounter()];
+  var url = arr.pop();
+  return url;
 };
 
 var getArrOfRoomPhotos = function (photos) {
@@ -117,7 +109,7 @@ var getArrOfRoomPhotos = function (photos) {
   }
 
   return arr;
-}
+};
 
 var getMockItem = function () {
   return {
