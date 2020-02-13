@@ -1,13 +1,22 @@
 'use strict';
 var map = document.querySelector('.map');
 var mapPins = map.querySelector('.map__pins');
+map.classList.remove('map--faded');
+
 var MAP_WIDTH = map.clientWidth;
-var MOCK_LENGTH = 8;
+var OFFERS_COUNT = 8;
+
+var MapRanges = {
+  VERT_MIN: 130,
+  VERT_MAX: 630,
+  HORIZ_MIN: 0,
+  HORIZ_MAX: MAP_WIDTH,
+};
+
 var PinSize = {
   WIDTH: 50,
   HEIGHT: 70
 };
-map.classList.remove('map--faded');
 
 var AVATAR_URLS = [
   'img/avatars/user01.png',
@@ -58,7 +67,7 @@ var DESCRIPTIONS = [
   'Азиатов просьба не беспокоить.'
 ];
 
-var DATES = [
+var TIMES = [
   '12:00',
   '13:00',
   '14:00'
@@ -86,9 +95,27 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
+var Rooms = {
+  MIN: 1,
+  MAX: 3
+};
+
+var Guests = {
+  MIN: 1,
+  MAX: 10
+};
+
+var RoomPrices = {
+  MIN: 300,
+  MAX: 3000
+};
+
 var getRandomItemFromArray = function (arr) {
-  var index = Math.floor(Math.random() * Math.floor(arr.length));
-  return arr[index];
+  return arr[getRandomInt(arr.length)];
+};
+
+var getRandomInt = function (val) {
+  return Math.floor(Math.random() * Math.floor(val));
 };
 
 var getRandomFromRange = function (min, max) {
@@ -97,8 +124,7 @@ var getRandomFromRange = function (min, max) {
 };
 
 var getAvatarUrl = function (arr) {
-  var url = arr.pop();
-  return url;
+  return arr.splice(getRandomInt(arr.length), 1);
 };
 
 var getArrOfRoomPhotos = function (photos) {
@@ -111,7 +137,7 @@ var getArrOfRoomPhotos = function (photos) {
   return arr;
 };
 
-var getMockItem = function () {
+var getMockOffer = function () {
   return {
     author: {
       avatar: getAvatarUrl(AVATAR_URLS),
@@ -119,27 +145,27 @@ var getMockItem = function () {
     offer: {
       title: getRandomItemFromArray(TITLES),
       address: getRandomItemFromArray(ADRESSES),
-      price: getRandomFromRange(300, 2000),
+      price: getRandomFromRange(RoomPrices.MIN, RoomPrices.MAX),
       type: getRandomItemFromArray(TYPES),
-      rooms: getRandomFromRange(1, 3),
-      guests: getRandomFromRange(1, 10),
-      checkin: getRandomItemFromArray(DATES),
-      checkout: getRandomItemFromArray(DATES),
+      rooms: getRandomFromRange(Rooms.MIN, Rooms.MAX),
+      guests: getRandomFromRange(Guests.MIN, Guests.MAX),
+      checkin: getRandomItemFromArray(TIMES),
+      checkout: getRandomItemFromArray(TIMES),
       features: getRandomItemFromArray(FEATURES),
       description: getRandomItemFromArray(DESCRIPTIONS),
       photos: getArrOfRoomPhotos(PHOTOS),
     },
     location: {
-      x: getRandomFromRange(0, MAP_WIDTH),
-      y: getRandomFromRange(130, 630)
+      x: getRandomFromRange(MapRanges.HORIZ_MIN, MapRanges.HORIZ_MAX),
+      y: getRandomFromRange(MapRanges.VERT_MIN, MapRanges.VERT_MAX)
     }
   };
 };
 
-var getMockArr = function (size) {
+var getMockOffers = function (size) {
   var arr = [];
   for (var i = 0; i < size; i++) {
-    arr.push(getMockItem());
+    arr.push(getMockOffer());
   }
   return arr;
 };
@@ -162,12 +188,12 @@ var getMapPinNode = function (pin) {
   return pinNode;
 };
 
-var fillMapOfPins = function (pins) {
+var fillMapOfPins = function (pins, target) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < pins.length; i++) {
     fragment.appendChild(getMapPinNode(pins[i]));
   }
-  mapPins.appendChild(fragment);
+  target.appendChild(fragment);
 };
 
-fillMapOfPins(getMockArr(MOCK_LENGTH));
+fillMapOfPins(getMockOffers(OFFERS_COUNT), mapPins);
