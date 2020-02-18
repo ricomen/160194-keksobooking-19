@@ -110,6 +110,34 @@ var RoomPrices = {
   MAX: 3000
 };
 
+var shuffleArray = function (array) {
+  var newArray = array.slice();
+  for (var i = newArray.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t1 = newArray[i];
+    var t2 = newArray[j]
+    newArray[i] = t2;
+    newArray[j] = t1;
+  };
+  return newArray;
+};
+
+
+var makeGetRandomAvatarUrlFunction = function (arr) {
+  var shuffledAvatarUrls = shuffleArray(arr);
+  var i = 0;
+
+  return function () {
+    if (i >= shuffledAvatarUrls.length) {
+      shuffledAvatarUrls = shuffleArray(arr);
+      i = 0;
+    }
+    return shuffledAvatarUrls[i++];
+  }
+};
+
+var getAvatarUrl = makeGetRandomAvatarUrlFunction(AVATAR_URLS);
+
 var getRandomItemFromArray = function (arr) {
   return arr[getRandomInt(arr.length)];
 };
@@ -121,10 +149,6 @@ var getRandomInt = function (val) {
 var getRandomFromRange = function (min, max) {
   var rand = min - 0.5 + Math.random() * (max - min + 1);
   return Math.round(rand);
-};
-
-var getAvatarUrl = function (arr) {
-  return arr.splice(getRandomInt(arr.length), 1);
 };
 
 var getArrOfRoomPhotos = function (photos) {
@@ -140,7 +164,7 @@ var getArrOfRoomPhotos = function (photos) {
 var getMockOffer = function () {
   return {
     author: {
-      avatar: getAvatarUrl(AVATAR_URLS),
+      avatar: getAvatarUrl(),
     },
     offer: {
       title: getRandomItemFromArray(TITLES),
