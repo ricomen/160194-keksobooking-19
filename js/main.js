@@ -227,10 +227,8 @@ var filterContainer = document.querySelector('.map__filters-container');
 
 var offerdCardTpl = document.querySelector('#card').content.querySelector('.map__card');
 
-var offerCardFragment = document.createDocumentFragment();
-
-var makeCardOffer = function (offerMocks) {
-  var offerData = offerMocks[0];
+var makeCardOffer = function (mocks) {
+  var offerData = mocks[0];
   var offerCard = offerdCardTpl.cloneNode(true);
   var offerCardAvatar = offerCard.querySelector('.popup__avatar');
   var offerCardTitle = offerCard.querySelector('.popup__title');
@@ -262,7 +260,7 @@ var makeCardOffer = function (offerMocks) {
         housingType = '';
     }
     return housingType;
-  }
+  };
 
   var getFeaturesFragment = function (features) {
     var fragment = new DocumentFragment();
@@ -288,23 +286,22 @@ var makeCardOffer = function (offerMocks) {
           li.className = 'popup__feature popup__feature--conditioner';
           break;
       }
-      console.log(li)
       fragment.append(li);
-    })
+    });
     return fragment;
-  }
+  };
 
   var getPhotosFragment = function (photos) {
     var fragment = new DocumentFragment();
     photos.forEach(function (photo) {
       var img = document.createElement('img');
       img.src = photo;
-      img.alt = "Фотография жилья";
-      img.width = "45";
-      img.height = "40";
-      img.className = "popup__photo"
+      img.alt = 'Фотография жилья';
+      img.width = '45';
+      img.height = '40';
+      img.className = 'popup__photo';
       fragment.append(img);
-    })
+    });
     return fragment;
   };
 
@@ -313,13 +310,12 @@ var makeCardOffer = function (offerMocks) {
   offerCardAddress.textContent = offerData.offer.address;
   offerCardPrice.textContent = offerData.offer.price + ' ₽/ночь';
   offerCardType.textContent = getHousingType(offerData.offer.type);
-  offerCardCapacity.textContent = `${offerData.offer.rooms} комнаты для ${offerData.offer.guests}`;
-  offerCardTime.textContent = `Заезд после ${offerData.offer.checkin}, выезд до ${offerData.offer.checkout}`;
-  offerCardFeatures.append(getFeaturesFragment(offerData.offer.features)) // !!!!!!!!
+  offerCardCapacity.textContent = offerData.offer.rooms + ' комнаты для ' + offerData.offer.guests;
+  offerCardTime.textContent = 'Заезд после ' + offerData.offer.checkin + ', выезд до ' + offerData.offer.checkout;
+  offerCardFeatures.append(getFeaturesFragment(offerData.offer.features));
   filterContainer.before(offerCard);
   offerCardDesciption.textContent = offerData.offer.description;
-  offerCardPhotos.appendChild(getPhotosFragment(offerData.offer.photos))
-}
+  offerCardPhotos.appendChild(getPhotosFragment(offerData.offer.photos));
+};
 
 makeCardOffer(offerMocks);
-
