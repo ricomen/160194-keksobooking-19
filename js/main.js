@@ -115,10 +115,10 @@ var shuffleArray = function (array) {
   for (var i = newArray.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var t1 = newArray[i];
-    var t2 = newArray[j]
+    var t2 = newArray[j];
     newArray[i] = t2;
     newArray[j] = t1;
-  };
+  }
   return newArray;
 };
 
@@ -133,7 +133,7 @@ var makeGetRandomAvatarUrlFunction = function (arr) {
       i = 0;
     }
     return shuffledAvatarUrls[i++];
-  }
+  };
 };
 
 var getAvatarUrl = makeGetRandomAvatarUrlFunction(AVATAR_URLS);
