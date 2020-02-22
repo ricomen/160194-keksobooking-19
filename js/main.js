@@ -86,7 +86,7 @@ var FEATURES = [
   'parking',
   'washer',
   'elevator',
-  'conditione'
+  'conditioner'
 ];
 
 var PHOTOS = [
@@ -228,7 +228,6 @@ var filterContainer = document.querySelector('.map__filters-container');
 var offerdCardTpl = document.querySelector('#card').content.querySelector('.map__card');
 
 var makeCardOffer = function (mocks) {
-  var offerData = mocks[0];
   var offerCard = offerdCardTpl.cloneNode(true);
   var offerCardAvatar = offerCard.querySelector('.popup__avatar');
   var offerCardTitle = offerCard.querySelector('.popup__title');
@@ -242,69 +241,47 @@ var makeCardOffer = function (mocks) {
   var offerCardPhotos = offerCard.querySelector('.popup__photos');
 
   var getHousingType = function (type) {
-    var housingType;
     switch (type) {
       case 'flat':
-        housingType = 'Квартира';
-        break;
+        return 'Квартира';
       case 'bungalo':
-        housingType = 'Бунгало';
-        break;
+        return 'Бунгало';
       case 'house':
-        housingType = 'Дом';
-        break;
+        return 'Дом';
       case 'palace':
-        housingType = 'Дворец';
-        break;
+        return 'Дворец';
       default:
-        housingType = '';
+        break;
     }
-    return housingType;
   };
 
   var getFeaturesFragment = function (features) {
-    var fragment = new DocumentFragment();
-    features.forEach(function (feature) {
+    return features.reduce(function (acc, feature) {
       var li = document.createElement('li');
-      switch (feature) {
-        case 'wifi':
-          li.className = 'popup__feature popup__feature--wifi';
-          break;
-        case 'dishwasher':
-          li.className = 'popup__feature popup__feature--dishwasher';
-          break;
-        case 'parking':
-          li.className = 'popup__feature popup__feature--parking';
-          break;
-        case 'washer':
-          li.className = 'popup__feature popup__feature--washer';
-          break;
-        case 'elevator':
-          li.className = 'popup__feature popup__feature--elevator';
-          break;
-        case 'conditioner':
-          li.className = 'popup__feature popup__feature--conditioner';
-          break;
-      }
-      fragment.append(li);
-    });
-    return fragment;
+      li.className = 'popup__feature popup__feature--' + feature;
+      acc.append(li);
+
+      return acc;
+    }, new DocumentFragment());
+
   };
 
   var getPhotosFragment = function (photos) {
-    var fragment = new DocumentFragment();
-    photos.forEach(function (photo) {
+    return photos.reduce(function (acc, photo) {
       var img = document.createElement('img');
       img.src = photo;
       img.alt = 'Фотография жилья';
       img.width = '45';
       img.height = '40';
       img.className = 'popup__photo';
-      fragment.append(img);
-    });
-    return fragment;
+      acc.append(img);
+
+      return acc;
+    }, new DocumentFragment());
+
   };
 
+  var offerData = mocks[0];
   offerCardAvatar.src = offerData.author.avatar;
   offerCardTitle.textContent = offerData.offer.title;
   offerCardAddress.textContent = offerData.offer.address;
