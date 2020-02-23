@@ -251,7 +251,7 @@ var makeCardOffer = function (mocks) {
       case 'palace':
         return 'Дворец';
       default:
-        break;
+        return;
     }
   };
 
