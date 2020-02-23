@@ -251,7 +251,7 @@ var makeCardOffer = function (mocks) {
       case 'palace':
         return 'Дворец';
       default:
-        return;
+        return 'Неизвестный тип жилья';
     }
   };
 
