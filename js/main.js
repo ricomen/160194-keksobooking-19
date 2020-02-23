@@ -315,7 +315,7 @@ var makeCardOffer = function (mocks) {
 
 makeCardOffer(offerMocks);
 
-var Price = {
+var Prices = {
   BUNGALO: 0,
   FLAT: 1000,
   HOUSE: 5000,
@@ -341,9 +341,9 @@ var adFormCapacity = adForm.querySelector('#capacity');
 // var adFormDescription = adForm.querySelector('#description');
 // var adFormImages = adForm.querySelector('#images');
 
-// Получение коорбинат блока
-var getCoords = function (elem) {
-  var box = elem.getBoundingClientRect();
+
+var getCoords = function (block) {
+  var box = block.getBoundingClientRect();
 
   return {
     top: box.top + pageYOffset,
@@ -376,16 +376,16 @@ var changeTypeMinPrice = function (value) {
 
   switch (value) {
     case 'bungalo':
-      minValue = Price.BUNGALO;
+      minValue = Prices.BUNGALO;
       break;
     case 'flat':
-      minValue = Price.FLAT;
+      minValue = Prices.FLAT;
       break;
     case 'house':
-      minValue = Price.HOUSE;
+      minValue = Prices.HOUSE;
       break;
     case 'palace':
-      minValue = Price.PALACE;
+      minValue = Prices.PALACE;
       break;
     default:
       break;
@@ -434,29 +434,19 @@ adForm.addEventListener('change', function (evt) {
 var toggleStateForm = function (form, flag) {
   var formElements = form.children;
   for (var i = 0; i < formElements.length; i++) {
-    formElements[i].disabled = flag;
+    formElements[i].disabled = !flag;
   }
 };
 
 var togglePageState = function (flag) {
   pageIsActive = flag;
-  if (flag) {
-    map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-    toggleStateForm(adForm, false);
-    toggleStateForm(mapFilters, false);
-
-  } else {
-
-    map.classList.add('map--faded');
-    adForm.classList.add('ad-form--disabled');
-    toggleStateForm(adForm, true);
-    toggleStateForm(mapFilters, true);
-
-  }
+  toggleStateForm(adForm, flag);
+  toggleStateForm(mapFilters, flag);
+  map.classList.toggle('map--faded', !flag);
+  adForm.classList.toggle('ad-form--disabled', !flag);
 };
 
-// togglePageState(false);
+togglePageState(false);
 fillAddFormAddress(getMainPinCoords(mapPinMain, map));
 
 var activatePage = function () {
@@ -484,8 +474,8 @@ mapPinMain.addEventListener('keydown', mapPinMainHandler);
 // var submit = document.querySelector('.ad-form__submit');
 
 // var submitHandler = function (evt) {
-// evt.preventDefault();
-// console.log( new FormData(evt.target).get(adFormAddress));
+//   evt.preventDefault();
+//   togglePageState(false);
 // };
 
 // adForm.addEventListener('submit', submitHandler);
