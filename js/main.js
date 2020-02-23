@@ -86,7 +86,7 @@ var FEATURES = [
   'parking',
   'washer',
   'elevator',
-  'conditione'
+  'conditioner'
 ];
 
 var PHOTOS = [
@@ -151,13 +151,12 @@ var getRandomFromRange = function (min, max) {
   return Math.round(rand);
 };
 
-var getArrOfRoomPhotos = function (photos) {
+var getArrOfStrings = function (strings) {
   var arr = [];
-  var length = getRandomFromRange(1, photos.length);
+  var length = getRandomFromRange(1, strings.length);
   for (var i = 0; i < length; i++) {
-    arr.push(photos[i]);
+    arr.push(strings[i]);
   }
-
   return arr;
 };
 
@@ -175,9 +174,9 @@ var getMockOffer = function () {
       guests: getRandomFromRange(Guests.MIN, Guests.MAX),
       checkin: getRandomItemFromArray(TIMES),
       checkout: getRandomItemFromArray(TIMES),
-      features: getRandomItemFromArray(FEATURES),
+      features: getArrOfStrings(FEATURES),
       description: getRandomItemFromArray(DESCRIPTIONS),
-      photos: getArrOfRoomPhotos(PHOTOS),
+      photos: getArrOfStrings(PHOTOS),
     },
     location: {
       x: getRandomFromRange(MapRanges.HORIZ_MIN, MapRanges.HORIZ_MAX),
@@ -193,6 +192,8 @@ var getMockOffers = function (size) {
   }
   return arr;
 };
+
+var offerMocks = getMockOffers(OFFERS_COUNT);
 
 var pinTpl = document.querySelector('#pin').content.querySelector('.map__pin');
 
@@ -221,3 +222,77 @@ var fillMapOfPins = function (pins, target) {
 };
 
 fillMapOfPins(getMockOffers(OFFERS_COUNT), mapPins);
+
+var filterContainer = document.querySelector('.map__filters-container');
+
+var offerdCardTpl = document.querySelector('#card').content.querySelector('.map__card');
+
+var makeCardOffer = function (mocks) {
+  var offerCard = offerdCardTpl.cloneNode(true);
+  var offerCardAvatar = offerCard.querySelector('.popup__avatar');
+  var offerCardTitle = offerCard.querySelector('.popup__title');
+  var offerCardAddress = offerCard.querySelector('.popup__text--address');
+  var offerCardPrice = offerCard.querySelector('.popup__text--price');
+  var offerCardType = offerCard.querySelector('.popup__type');
+  var offerCardCapacity = offerCard.querySelector('.popup__text--capacity');
+  var offerCardTime = offerCard.querySelector('.popup__text--time');
+  var offerCardFeatures = offerCard.querySelector('.popup__features');
+  var offerCardDesciption = offerCard.querySelector('.popup__description');
+  var offerCardPhotos = offerCard.querySelector('.popup__photos');
+
+  var getHousingType = function (type) {
+    switch (type) {
+      case 'flat':
+        return 'Квартира';
+      case 'bungalo':
+        return 'Бунгало';
+      case 'house':
+        return 'Дом';
+      case 'palace':
+        return 'Дворец';
+      default:
+        return 'Неизвестный тип жилья';
+    }
+  };
+
+  var getFeaturesFragment = function (features) {
+    return features.reduce(function (acc, feature) {
+      var li = document.createElement('li');
+      li.className = 'popup__feature popup__feature--' + feature;
+      acc.append(li);
+
+      return acc;
+    }, new DocumentFragment());
+
+  };
+
+  var getPhotosFragment = function (photos) {
+    return photos.reduce(function (acc, photo) {
+      var img = document.createElement('img');
+      img.src = photo;
+      img.alt = 'Фотография жилья';
+      img.width = '45';
+      img.height = '40';
+      img.className = 'popup__photo';
+      acc.append(img);
+
+      return acc;
+    }, new DocumentFragment());
+
+  };
+
+  var offerData = mocks[0];
+  offerCardAvatar.src = offerData.author.avatar;
+  offerCardTitle.textContent = offerData.offer.title;
+  offerCardAddress.textContent = offerData.offer.address;
+  offerCardPrice.textContent = offerData.offer.price + ' ₽/ночь';
+  offerCardType.textContent = getHousingType(offerData.offer.type);
+  offerCardCapacity.textContent = offerData.offer.rooms + ' комнаты для ' + offerData.offer.guests;
+  offerCardTime.textContent = 'Заезд после ' + offerData.offer.checkin + ', выезд до ' + offerData.offer.checkout;
+  offerCardFeatures.append(getFeaturesFragment(offerData.offer.features));
+  filterContainer.before(offerCard);
+  offerCardDesciption.textContent = offerData.offer.description;
+  offerCardPhotos.appendChild(getPhotosFragment(offerData.offer.photos));
+};
+
+makeCardOffer(offerMocks);
