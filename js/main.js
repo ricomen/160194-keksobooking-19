@@ -372,27 +372,9 @@ var fillAddFormAddress = function (addrress) {
 };
 
 var changeTypeMinPrice = function (value) {
-  var minValue = 0;
-
-  switch (value) {
-    case 'bungalo':
-      minValue = Prices.BUNGALO;
-      break;
-    case 'flat':
-      minValue = Prices.FLAT;
-      break;
-    case 'house':
-      minValue = Prices.HOUSE;
-      break;
-    case 'palace':
-      minValue = Prices.PALACE;
-      break;
-    default:
-      break;
-  }
-
-  adFormPrice.min = minValue;
-  adFormPrice.placeholder = minValue;
+  value = Prices[value.toUpperCase()] || Prices.BUNGALO;
+  adFormPrice.min = value;
+  adFormPrice.placeholder = value;
 };
 
 var changeGuestCapacity = function (number) {
@@ -403,6 +385,7 @@ var changeGuestCapacity = function (number) {
     option.value = roomCount;
     option.textContent = GuestCounts[roomCount];
     acc.append(option);
+
     return acc;
   }, new DocumentFragment());
 
@@ -433,9 +416,9 @@ adForm.addEventListener('change', function (evt) {
 
 var toggleStateForm = function (form, flag) {
   var formElements = form.children;
-  for (var i = 0; i < formElements.length; i++) {
-    formElements[i].disabled = !flag;
-  }
+  Array.prototype.forEach.call(formElements, function (formElement) {
+    formElement.disabled = !flag;
+  });
 };
 
 var togglePageState = function (flag) {
@@ -461,10 +444,10 @@ var activatePage = function () {
 // };
 
 var mapPinMainHandler = function () {
-  if (!pageIsActive) {
-    activatePage(true);
-  } else {
+  if (pageIsActive) {
     // Drag & Drop
+  } else {
+    activatePage(true);
   }
 };
 
