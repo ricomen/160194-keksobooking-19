@@ -1,8 +1,5 @@
 'use strict';
 var map = document.querySelector('.map');
-var mapPins = map.querySelector('.map__pins');
-map.classList.remove('map--faded');
-
 var MAP_WIDTH = map.clientWidth;
 var OFFERS_COUNT = 8;
 
@@ -16,6 +13,11 @@ var MapRanges = {
 var PinSize = {
   WIDTH: 50,
   HEIGHT: 70
+};
+
+var MainPinSize = {
+  WIDTH: 50,
+  HEIGHT: 82
 };
 
 var AVATAR_URLS = [
@@ -98,6 +100,21 @@ var PHOTOS = [
 var Rooms = {
   MIN: 1,
   MAX: 3
+};
+
+var RoomsCounts = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0],
+  DEFAULT: [0, 1, 2, 3]
+};
+
+var GuestCounts = {
+  0: 'не для гостей',
+  1: 'для 1 гостя',
+  2: 'для 2 гостей',
+  3: 'для 3 гостей',
 };
 
 var Guests = {
@@ -195,6 +212,9 @@ var getMockOffers = function (size) {
 
 var offerMocks = getMockOffers(OFFERS_COUNT);
 
+var mapPins = map.querySelector('.map__pins');
+var mapPinMain = map.querySelector('.map__pin--main');
+var mapFilters = map.querySelector('.map__filters');
 var pinTpl = document.querySelector('#pin').content.querySelector('.map__pin');
 
 var getMapPinNode = function (pin) {
@@ -220,8 +240,6 @@ var fillMapOfPins = function (pins, target) {
   }
   target.appendChild(fragment);
 };
-
-fillMapOfPins(getMockOffers(OFFERS_COUNT), mapPins);
 
 var filterContainer = document.querySelector('.map__filters-container');
 
@@ -296,3 +314,151 @@ var makeCardOffer = function (mocks) {
 };
 
 makeCardOffer(offerMocks);
+
+var Prices = {
+  BUNGALO: 0,
+  FLAT: 1000,
+  HOUSE: 5000,
+  PALACE: 10000
+};
+
+var pageIsActive = false;
+
+var adForm = document.querySelector('.ad-form');
+// var adFormTitle = adForm.querySelector('#title');
+var adFormAddress = adForm.querySelector('#address');
+// var adFormType = adForm.querySelector('#type');
+var adFormPrice = adForm.querySelector('#price');
+var adFormTimeIn = adForm.querySelector('#timein');
+var adFormTimeOut = adForm.querySelector('#timeout');
+var adFormRoomNumber = adForm.querySelector('#room_number');
+var adFormCapacity = adForm.querySelector('#capacity');
+// var adFormFeatureWifi = adForm.querySelector('#feature-wifi');
+// var adFormFeatureDishwasher = adForm.querySelector('#feature-dishwasher');
+// var adFormFeatureWasher = adForm.querySelector('#feature-washer');
+// var adFormFeatureElevator = adForm.querySelector('#feature-elevator');
+// var adFormFeatureConditioner = adForm.querySelector('#feature-conditioner');
+// var adFormDescription = adForm.querySelector('#description');
+// var adFormImages = adForm.querySelector('#images');
+
+
+var getCoords = function (block) {
+  var box = block.getBoundingClientRect();
+
+  return {
+    top: box.top + pageYOffset,
+    left: box.left + pageXOffset
+  };
+
+};
+
+var getMainPinCoords = function (pin, block) {
+  var mapCoords = getCoords(block);
+  var pinWidth = MainPinSize.WIDTH;
+  var pinHeight = MainPinSize.HEIGHT;
+  var pinCoordsX = Math.round(getCoords(pin).left + pinWidth / 2 - mapCoords.left);
+  var pinCoordsY = Math.round(getCoords(pin).top + pinHeight - mapCoords.top);
+
+  return {
+    top: pinCoordsX,
+    left: pinCoordsY
+  };
+};
+
+var fillAddFormAddress = function (addrress) {
+  var top = addrress.top;
+  var left = addrress.left;
+  adFormAddress.value = left + ', ' + top;
+};
+
+var changeTypeMinPrice = function (value) {
+  value = Prices[value.toUpperCase()] || Prices.BUNGALO;
+  adFormPrice.min = value;
+  adFormPrice.placeholder = value;
+};
+
+var changeGuestCapacity = function (number) {
+  adFormCapacity.length = 0;
+
+  var fragment = RoomsCounts[number].reduce(function (acc, roomCount) {
+    var option = document.createElement('option');
+    option.value = roomCount;
+    option.textContent = GuestCounts[roomCount];
+    acc.append(option);
+
+    return acc;
+  }, new DocumentFragment());
+
+  adFormCapacity.append(fragment);
+};
+
+adForm.addEventListener('change', function (evt) {
+  var target = evt.target;
+  var value = target.value;
+
+  switch (target.id) {
+    case 'timein':
+      adFormTimeOut.value = value;
+      break;
+    case 'timeout':
+      adFormTimeIn.value = value;
+      break;
+    case 'type':
+      changeTypeMinPrice(value);
+      break;
+    case 'room_number':
+      changeGuestCapacity(value);
+      break;
+    default:
+      break;
+  }
+});
+
+var toggleStateForm = function (form, flag) {
+  var formElements = form.children;
+  Array.prototype.forEach.call(formElements, function (formElement) {
+    formElement.disabled = !flag;
+  });
+};
+
+var togglePageState = function (flag) {
+  pageIsActive = flag;
+  toggleStateForm(adForm, flag);
+  toggleStateForm(mapFilters, flag);
+  map.classList.toggle('map--faded', !flag);
+  adForm.classList.toggle('ad-form--disabled', !flag);
+};
+
+togglePageState(false);
+fillAddFormAddress(getMainPinCoords(mapPinMain, map));
+
+var activatePage = function () {
+  togglePageState(true);
+  changeGuestCapacity(adFormRoomNumber.value);
+  fillMapOfPins(getMockOffers(OFFERS_COUNT), mapPins);
+  fillAddFormAddress(getMainPinCoords(mapPinMain, map));
+};
+
+// var disablePage = function () {
+//   togglePageState(false);
+// };
+
+var mapPinMainHandler = function () {
+  if (pageIsActive) {
+    // Drag & Drop
+  } else {
+    activatePage(true);
+  }
+};
+
+
+mapPinMain.addEventListener('mousedown', mapPinMainHandler);
+mapPinMain.addEventListener('keydown', mapPinMainHandler);
+// var submit = document.querySelector('.ad-form__submit');
+
+// var submitHandler = function (evt) {
+//   evt.preventDefault();
+//   togglePageState(false);
+// };
+
+// adForm.addEventListener('submit', submitHandler);
