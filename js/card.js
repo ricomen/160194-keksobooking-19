@@ -2,7 +2,13 @@
 (function () {
   var map = document.querySelector('.map');
   var offerdCardTpl = document.querySelector('#card').content.querySelector('.map__card');
-  var openedOffer = {};
+
+
+  var KeyCode = {
+    ENTER: 13,
+    ESC: 27,
+    MOUSE_LEFT: 0
+  };
 
   var offerCloseHandler = function (evt) {
     if (evt.keyCode === KeyCode.ESC || evt.button === KeyCode.MOUSE_LEFT) {
@@ -11,10 +17,7 @@
   };
 
   var closeCard = function () {
-    openedOffer.card.removeEventListener('mousedown', offerCloseHandler);
-    document.removeEventListener('keydown', offerCloseHandler);
-    openedOffer.card.remove();
-    openedOffer.pin.classList.remove('map__pin--active');
+
   };
 
   var renderCard = function (data) {
@@ -24,8 +27,6 @@
     cardClose.addEventListener('mousedown', offerCloseHandler);
     document.addEventListener('keydown', offerCloseHandler);
     filterContainer.before(card);
-    openedOffer.card = card;
-
   };
 
   var getCard = function (data) {
