@@ -1,14 +1,5 @@
 'use strict';
 var map = document.querySelector('.map');
-var MAP_WIDTH = map.clientWidth;
-var OFFERS_COUNT = 8;
-
-var MapRanges = {
-  VERT_MIN: 130,
-  VERT_MAX: 630,
-  HORIZ_MIN: 0,
-  HORIZ_MAX: MAP_WIDTH,
-};
 
 var PinSize = {
   WIDTH: 50,
@@ -18,88 +9,6 @@ var PinSize = {
 var MainPinSize = {
   WIDTH: 50,
   HEIGHT: 82
-};
-
-var AVATAR_URLS = [
-  'img/avatars/user01.png',
-  'img/avatars/user02.png',
-  'img/avatars/user03.png',
-  'img/avatars/user04.png',
-  'img/avatars/user05.png',
-  'img/avatars/user06.png',
-  'img/avatars/user07.png',
-  'img/avatars/user08.png'
-];
-
-var TITLES = [
-  'Уютное гнездышко для молодоженов',
-  'Маленькая квартирка рядом с парком',
-  'Небольшая лавочка в парке',
-  'Императорский дворец в центре Токио',
-  'Милейший чердачок',
-  'Наркоманский притон',
-  'Чёткая хата',
-  'Стандартная квартира в центре',
-  'Тихая квартирка недалеко от метро',
-  'Милое гнездышко для фанатов Анимэ'
-];
-
-var ADRESSES = [
-  '102-0082 Tōkyō-to, Chiyoda-ku, Ichibanchō, 14−3',
-  '102-0075 Tōkyō-to, Chiyoda-ku, Sanbanchō',
-  'Chiyoda-ku, Tōkyō-to 102-0091',
-  '1-1 Chiyoda, Chiyoda-ku, Tōkyō-to 100-8111',
-  '102-0094 Tōkyō-to, Chiyoda-ku, Kioichō, 3',
-  '102-0081 Tōkyō-to, Chiyoda-ku, Yonbanchō, 5−6',
-  'Chiyoda-ku, Tōkyō-to 102-0082',
-  '102-0082 Tōkyō-to, Chiyoda-ku, Ichibanchō, 17−4102-0082 Tōkyō-to, Chiyoda-ku, Ichibanchō, 17−4',
-  '105-0003 Tōkyō-to, Minato-ku, Nishishinbashi, 2 Chome−3'
-];
-
-var DESCRIPTIONS = [
-  'Великолепный таун-хауз в центре Токио. Подходит как туристам, так и бизнесменам. Дом полностью укомплектован и имеет свежий ремонт.',
-  'Маленькая чистая квратира на краю парка. Без интернета, регистрации и СМС.',
-  'Великолепная лавочка прямо в центре парка. Подходит для всех кто любит спать на свежем воздухе.',
-  'Замечательный дворец в старинном центре города. Только для тех кто может себе позволить дворец. Лакеев и прочих жокеев просим не беспокоить.',
-  'Маленькая квартирка на чердаке. Для самых не требовательных.',
-  'У нас есть всё! Шприцы, интернет, кофе. Для всех кто знает толк в отдыхе. Полицию просим не беспокоить.',
-  'У нас тут все ништяк. Ларек за углом. Шава 24 часа. Приезжайте! Интернетов нет!',
-  'Тут красиво, светло и уютно. Есть где разместиться компании из 5 человек. Кофе и печеньки бесплатно.',
-  'Квартира на первом этаже. Соседи тихие. Для всех, кто терпеть не может шума и суеты.',
-  'Азиатов просьба не беспокоить.'
-];
-
-var TIMES = [
-  '12:00',
-  '13:00',
-  '14:00'
-];
-
-var TYPES = [
-  'palace',
-  'flat',
-  'house',
-  'bungalo'
-];
-
-var FEATURES = [
-  'wifi',
-  'dishwasher',
-  'parking',
-  'washer',
-  'elevator',
-  'conditioner'
-];
-
-var PHOTOS = [
-  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-  'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-];
-
-var Rooms = {
-  MIN: 1,
-  MAX: 3
 };
 
 var RoomsCounts = {
@@ -117,106 +26,30 @@ var GuestCounts = {
   3: 'для 3 гостей',
 };
 
-var Guests = {
-  MIN: 1,
-  MAX: 10
-};
-
-var RoomPrices = {
-  MIN: 300,
-  MAX: 3000
-};
-
-var shuffleArray = function (array) {
-  var newArray = array.slice();
-  for (var i = newArray.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var t1 = newArray[i];
-    var t2 = newArray[j];
-    newArray[i] = t2;
-    newArray[j] = t1;
-  }
-  return newArray;
-};
-
-
-var makeGetRandomAvatarUrlFunction = function (arr) {
-  var shuffledAvatarUrls = shuffleArray(arr);
-  var i = 0;
-
-  return function () {
-    if (i >= shuffledAvatarUrls.length) {
-      shuffledAvatarUrls = shuffleArray(arr);
-      i = 0;
-    }
-    return shuffledAvatarUrls[i++];
-  };
-};
-
-var getAvatarUrl = makeGetRandomAvatarUrlFunction(AVATAR_URLS);
-
-var getRandomItemFromArray = function (arr) {
-  return arr[getRandomInt(arr.length)];
-};
-
-var getRandomInt = function (val) {
-  return Math.floor(Math.random() * Math.floor(val));
-};
-
-var getRandomFromRange = function (min, max) {
-  var rand = min - 0.5 + Math.random() * (max - min + 1);
-  return Math.round(rand);
-};
-
-var getArrOfStrings = function (strings) {
-  var arr = [];
-  var length = getRandomFromRange(1, strings.length);
-  for (var i = 0; i < length; i++) {
-    arr.push(strings[i]);
-  }
-  return arr;
-};
-
-var getMockOffer = function () {
-  return {
-    author: {
-      avatar: getAvatarUrl(),
-    },
-    offer: {
-      title: getRandomItemFromArray(TITLES),
-      address: getRandomItemFromArray(ADRESSES),
-      price: getRandomFromRange(RoomPrices.MIN, RoomPrices.MAX),
-      type: getRandomItemFromArray(TYPES),
-      rooms: getRandomFromRange(Rooms.MIN, Rooms.MAX),
-      guests: getRandomFromRange(Guests.MIN, Guests.MAX),
-      checkin: getRandomItemFromArray(TIMES),
-      checkout: getRandomItemFromArray(TIMES),
-      features: getArrOfStrings(FEATURES),
-      description: getRandomItemFromArray(DESCRIPTIONS),
-      photos: getArrOfStrings(PHOTOS),
-    },
-    location: {
-      x: getRandomFromRange(MapRanges.HORIZ_MIN, MapRanges.HORIZ_MAX),
-      y: getRandomFromRange(MapRanges.VERT_MIN, MapRanges.VERT_MAX)
-    }
-  };
-};
-
-var getMockOffers = function (size) {
-  var arr = [];
-  for (var i = 0; i < size; i++) {
-    arr.push(getMockOffer());
-  }
-  return arr;
-};
-
-var offerMocks = getMockOffers(OFFERS_COUNT);
-
 var mapPins = map.querySelector('.map__pins');
 var mapPinMain = map.querySelector('.map__pin--main');
 var mapFilters = map.querySelector('.map__filters');
 var pinTpl = document.querySelector('#pin').content.querySelector('.map__pin');
-var openedOffer = {};
+var activeCard = {card: null, pin: null};
+
+var checkToActivePin = function (currentPin) {
+  return currentPin === activeCard.pin;
+};
+
+var hasActiveCard = function () {
+  return !!activeCard.pin;
+};
+
+var setActiveCard = function (pin, card) {
+  activeCard = {
+    card: card,
+    pin: pin
+  };
+};
+
+var clearActiveCard = function () {
+  activeCard = {card: null, pin: null};
+};
 
 var getMapPinNode = function (pin) {
   var pinNode = pinTpl.cloneNode(true);
@@ -232,11 +65,15 @@ var getMapPinNode = function (pin) {
   pinNode.style.top = pinY;
 
   var pinClickHandler = function () {
-
+    if (hasActiveCard() && checkToActivePin(pinNode)) {
+      return;
+    } else if (hasActiveCard()) {
+      closeOfferCard();
+    }
     pinNode.classList.add('map__pin--active');
-    renderOfferCard(pin);
-    openedOffer.pin = pinNode;
-
+    var card = getOfferCard(pin);
+    setActiveCard(pinNode, card);
+    renderOfferCard(card);
   };
 
   pinNode.addEventListener('click', pinClickHandler);
@@ -251,35 +88,7 @@ var fillMapOfPins = function (pins, target) {
   }, new DocumentFragment()));
 };
 
-
 var offerdCardTpl = document.querySelector('#card').content.querySelector('.map__card');
-
-var offerCloseHandler = function (evt) {
-  if (evt.keyCode === KeyCode.ESC) {
-    closeOfferCard();
-  }
-};
-
-
-var closeOfferCard = function () {
-  openedOffer.card.removeEventListener('click', offerCloseHandler);
-  document.removeEventListener('keydown', offerCloseHandler);
-  openedOffer.card.remove();
-  openedOffer.pin.classList.remove('map__pin--active');
-};
-
-var renderOfferCard = function (data) {
-  var filterContainer = map.querySelector('.map__filters-container');
-  var card = getOfferCard(data);
-  var cardClose = card.querySelector('.popup__close');
-
-  cardClose.addEventListener('click', offerCloseHandler);
-  document.addEventListener('keydown', offerCloseHandler);
-
-  filterContainer.before(card);
-  openedOffer.card = card;
-};
-
 
 var KeyCode = {
   ENTER: 13,
@@ -287,6 +96,28 @@ var KeyCode = {
   MOUSE_LEFT: 0
 };
 
+var offerCloseHandler = function (evt) {
+  if (evt.keyCode === KeyCode.ESC || evt.button === KeyCode.MOUSE_LEFT) {
+    closeOfferCard();
+  }
+};
+
+
+var closeOfferCard = function () {
+  activeCard.card.removeEventListener('mousedown', offerCloseHandler);
+  document.removeEventListener('keydown', offerCloseHandler);
+  activeCard.card.remove();
+  activeCard.pin.classList.remove('map__pin--active');
+  clearActiveCard();
+};
+
+var renderOfferCard = function (card) {
+  var filterContainer = map.querySelector('.map__filters-container');
+  var cardClose = card.querySelector('.popup__close');
+  cardClose.addEventListener('mousedown', offerCloseHandler);
+  document.addEventListener('keydown', offerCloseHandler);
+  filterContainer.before(card);
+};
 
 var getOfferCard = function (data) {
   var offerCard = offerdCardTpl.cloneNode(true);
@@ -477,7 +308,7 @@ fillAddFormAddress(getMainPinCoords(mapPinMain, map));
 var activatePage = function () {
   togglePageState(true);
   changeGuestCapacity(adFormRoomNumber.value);
-  fillMapOfPins(offerMocks, mapPins);
+  fillMapOfPins(window.offerMocks, mapPins);
   fillAddFormAddress(getMainPinCoords(mapPinMain, map));
 };
 
