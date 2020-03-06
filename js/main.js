@@ -216,6 +216,26 @@ var mapPins = map.querySelector('.map__pins');
 var mapPinMain = map.querySelector('.map__pin--main');
 var mapFilters = map.querySelector('.map__filters');
 var pinTpl = document.querySelector('#pin').content.querySelector('.map__pin');
+var activeCard = {card: null, pin: null};
+
+var checkToActivePin = function (currentPin) {
+  return currentPin === activeCard.pin;
+};
+
+var hasActiveCard = function () {
+  return !!activeCard.pin;
+};
+
+var setActiveCard = function (pin, card) {
+  activeCard = {
+    card: card,
+    pin: pin
+  };
+};
+
+var clearActiveCard = function () {
+  activeCard = {card: null, pin: null};
+};
 
 var getMapPinNode = function (pin) {
   var pinNode = pinTpl.cloneNode(true);
@@ -230,22 +250,65 @@ var getMapPinNode = function (pin) {
   pinNode.style.left = pinX;
   pinNode.style.top = pinY;
 
+  var pinClickHandler = function () {
+
+    if (hasActiveCard() && checkToActivePin(pinNode)) {
+      return;
+    } else if (hasActiveCard()) {
+      closeOfferCard();
+    }
+    pinNode.classList.add('map__pin--active');
+    var card = getOfferCard(pin);
+    setActiveCard(pinNode, card);
+    renderOfferCard(card);
+
+  };
+
+  pinNode.addEventListener('click', pinClickHandler);
+
   return pinNode;
 };
 
 var fillMapOfPins = function (pins, target) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < pins.length; i++) {
-    fragment.appendChild(getMapPinNode(pins[i]));
-  }
-  target.appendChild(fragment);
+  target.append(pins.reduce(function (acc, pin) {
+    acc.append(getMapPinNode(pin));
+    return acc;
+  }, new DocumentFragment()));
 };
 
-var filterContainer = document.querySelector('.map__filters-container');
 
 var offerdCardTpl = document.querySelector('#card').content.querySelector('.map__card');
 
-var makeCardOffer = function (mocks) {
+var offerCloseHandler = function (evt) {
+  if (evt.keyCode === KeyCode.ESC || evt.button === KeyCode.MOUSE_LEFT) {
+    closeOfferCard();
+  }
+};
+
+
+var closeOfferCard = function () {
+  activeCard.card.removeEventListener('mousedown', offerCloseHandler);
+  document.removeEventListener('keydown', offerCloseHandler);
+  activeCard.card.remove();
+  activeCard.pin.classList.remove('map__pin--active');
+  clearActiveCard();
+};
+
+var renderOfferCard = function (card) {
+  var filterContainer = map.querySelector('.map__filters-container');
+  var cardClose = card.querySelector('.popup__close');
+  cardClose.addEventListener('mousedown', offerCloseHandler);
+  document.addEventListener('keydown', offerCloseHandler);
+  filterContainer.before(card);
+};
+
+var KeyCode = {
+  ENTER: 13,
+  ESC: 27,
+  MOUSE_LEFT: 0
+};
+
+var getOfferCard = function (data) {
   var offerCard = offerdCardTpl.cloneNode(true);
   var offerCardAvatar = offerCard.querySelector('.popup__avatar');
   var offerCardTitle = offerCard.querySelector('.popup__title');
@@ -299,7 +362,7 @@ var makeCardOffer = function (mocks) {
 
   };
 
-  var offerData = mocks[0];
+  var offerData = data;
   offerCardAvatar.src = offerData.author.avatar;
   offerCardTitle.textContent = offerData.offer.title;
   offerCardAddress.textContent = offerData.offer.address;
@@ -308,12 +371,11 @@ var makeCardOffer = function (mocks) {
   offerCardCapacity.textContent = offerData.offer.rooms + ' комнаты для ' + offerData.offer.guests;
   offerCardTime.textContent = 'Заезд после ' + offerData.offer.checkin + ', выезд до ' + offerData.offer.checkout;
   offerCardFeatures.append(getFeaturesFragment(offerData.offer.features));
-  filterContainer.before(offerCard);
   offerCardDesciption.textContent = offerData.offer.description;
-  offerCardPhotos.appendChild(getPhotosFragment(offerData.offer.photos));
-};
+  offerCardPhotos.append(getPhotosFragment(offerData.offer.photos));
 
-makeCardOffer(offerMocks);
+  return offerCard;
+};
 
 var Prices = {
   BUNGALO: 0,
@@ -435,7 +497,7 @@ fillAddFormAddress(getMainPinCoords(mapPinMain, map));
 var activatePage = function () {
   togglePageState(true);
   changeGuestCapacity(adFormRoomNumber.value);
-  fillMapOfPins(getMockOffers(OFFERS_COUNT), mapPins);
+  fillMapOfPins(offerMocks, mapPins);
   fillAddFormAddress(getMainPinCoords(mapPinMain, map));
 };
 
