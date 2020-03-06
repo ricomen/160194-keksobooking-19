@@ -89,7 +89,7 @@
   };
 
   var cardCloseHandler = function (evt) {
-    if (evt.keyCode === window.enums.KeyCode.ESC || evt.button === window.enums.KeyCode.MOUSE_LEFT) {
+    if (window.utils.isEscPress(evt.keyCode) || window.utils.mouseLeftPress(evt.button)) {
       removeCard();
     }
   };

@@ -10,6 +10,12 @@
     HEIGHT: 82
   };
 
+  var KeyCodes = {
+    ENTER: 13,
+    ESC: 27,
+    MOUSE_LEFT: 0
+  };
+
   var ErrorCodes = {
     404: 'Страница не найдена. Неправильный url',
     SYNTAX_ERROR: 'Невалидные данные с сервера. Попробуйте позже',
@@ -20,7 +26,8 @@
   window.enums = {
     PinSize: PinSize,
     MainPinSize: MainPinSize,
-    ErrorCodes: ErrorCodes
+    ErrorCodes: ErrorCodes,
+    KeyCodes: KeyCodes
   };
 
 })();
