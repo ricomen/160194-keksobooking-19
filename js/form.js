@@ -102,6 +102,7 @@
         break;
     }
   });
+
   changeTypeMinPrice(adFormType.value);
   changeGuestCapacity(adFormRoomNumber.value);
   fillAddress();

@@ -3,7 +3,6 @@
   var map = document.querySelector('.map');
   var adForm = document.querySelector('.ad-form');
   var mapFilters = document.querySelector('.map__filters');
-  var pageIsActive = false;
 
   var getCoords = function (block) {
     var box = block.getBoundingClientRect();
@@ -23,7 +22,7 @@
   };
 
   var togglePageState = function (flag) {
-    pageIsActive = flag;
+    window.data.pageIsActive = flag;
     toggleStateForm(adForm, flag);
     toggleStateForm(mapFilters, flag);
     map.classList.toggle('map--faded', !flag);

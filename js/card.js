@@ -1,10 +1,10 @@
 'use strict';
 (function () {
   var map = document.querySelector('.map');
-  var pins = map.querySelector('.map__pins');
+  // var pins = map.querySelector('.map__pins');
   var cardTpl = document.querySelector('#card').content.querySelector('.map__card');
 
-  var renderCard = function (data) {
+  var getCard = function (data) {
     var card = cardTpl.cloneNode(true);
     var cardAvatar = card.querySelector('.popup__avatar');
     var cardTitle = card.querySelector('.popup__title');
@@ -69,14 +69,33 @@
     cardFeatures.append(getFeaturesFragment(cardData.offer.features));
     cardDesciption.textContent = cardData.offer.description;
     cardPhotos.appendChild(getPhotosFragment(cardData.offer.photos));
-    pins.after(card);
+    return card;
   };
 
   var removeCard = function () {
+    window.data.offer.card.removeEventListener('mousedown', cardCloseHandler);
+    document.removeEventListener('keydown', cardCloseHandler);
+    window.data.offer.pin.classList.remove('map__pin--active');
+    window.data.offer.card.remove();
+    window.data.offer.clear();
+  };
 
+  var renderCard = function (card) {
+    var filterContainer = map.querySelector('.map__filters-container');
+    var cardClose = card.querySelector('.popup__close');
+    cardClose.addEventListener('mousedown', cardCloseHandler);
+    document.addEventListener('keydown', cardCloseHandler);
+    filterContainer.before(card);
+  };
+
+  var cardCloseHandler = function (evt) {
+    if (evt.keyCode === window.enums.KeyCode.ESC || evt.button === window.enums.KeyCode.MOUSE_LEFT) {
+      removeCard();
+    }
   };
 
   window.card = {
+    get: getCard,
     render: renderCard,
     remove: removeCard
   };
