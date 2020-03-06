@@ -14,7 +14,8 @@
   window.utils.togglePageState(false);
 
   window.map = {
-    fillMap: fillMapOfPins
+    fillMap: fillMapOfPins,
+    // clear: clear
   };
 
 })();
