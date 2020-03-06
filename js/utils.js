@@ -49,7 +49,7 @@
       method: 'GET',
       onSuccess: window.map.fillMap,
       onError: function () {
-        // console.log('чет пошло не так');
+
       }
     });
   };
