@@ -41,7 +41,7 @@
       return;
     } else {
       window.utils.activatePage(true);
-      window.dnd.init(window.form.fillAddress());
+      window.dnd.init(window.form.fillAddress);
       mapPinMain.removeEventListener('mousedown', mapPinMainHandler);
       mapPinMain.removeEventListener('keydown', mapPinMainHandler);
     }
