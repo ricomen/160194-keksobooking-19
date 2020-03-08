@@ -12,7 +12,7 @@
     return keyCode === window.enums.KeyCodes.ENTER;
   };
 
-  var mouseLeftPress = function (keyCode) {
+  var isMouseLeftPress = function (keyCode) {
     return keyCode === window.enums.KeyCodes.MOUSE_LEFT;
   };
 
@@ -47,10 +47,7 @@
     window.request({
       url: 'https://js.dump.academy/keksobooking/data',
       method: 'GET',
-      onSuccess: window.map.fillMap,
-      onError: function () {
-
-      }
+      onSuccess: window.map.fill
     });
   };
 
@@ -61,7 +58,7 @@
     activatePage: activatePage,
     isEscPress: isEscPress,
     isEnterPress: isEnterPress,
-    mouseLeftPress: mouseLeftPress
+    isMouseLeftPress: isMouseLeftPress
   };
 
 })();

@@ -19,6 +19,7 @@
   // var adFormFeatureConditioner = adForm.querySelector('#feature-conditioner');
   // var adFormDescription = adForm.querySelector('#description');
   // var adFormImages = adForm.querySelector('#images');
+  var mapFilters = document.querySelector('.map__filters');
 
   var RoomsCounts = {
     1: [1],
@@ -103,9 +104,38 @@
     }
   });
 
-  changeTypeMinPrice(adFormType.value);
-  changeGuestCapacity(adFormRoomNumber.value);
-  fillAddress();
+  var formSubmitHandler = function (evt) {
+    evt.preventDefault();
+    var data = new FormData(adForm);
+    window.request({
+      url: 'https://js.dump.academy/keksobooking',
+      method: 'POST',
+      onSuccess: function () {
+        window.popup('success', function () {
+          initForm();
+          window.map.reset();
+          window.utils.togglePageState(false);
+        });
+      },
+      onError: function () {
+        window.popup('error');
+      },
+      body: data
+    });
+  };
+
+  adForm.addEventListener('submit', formSubmitHandler);
+
+  var initForm = function () {
+    mapFilters.reset();
+    adForm.reset();
+    changeTypeMinPrice(adFormType.value);
+    changeGuestCapacity(adFormRoomNumber.value);
+    fillAddress();
+  };
+
+  initForm();
+
 
   window.form = {
     fillAddress: fillAddress
