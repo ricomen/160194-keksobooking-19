@@ -66,9 +66,24 @@
     cardType.textContent = getHousingType(cardData.offer.type);
     cardCapacity.textContent = cardData.offer.rooms + ' комнаты для ' + cardData.offer.guests;
     cardTime.textContent = 'Заезд после ' + cardData.offer.checkin + ', выезд до ' + cardData.offer.checkout;
-    cardFeatures.append(getFeaturesFragment(cardData.offer.features));
-    cardDesciption.textContent = cardData.offer.description;
-    cardPhotos.appendChild(getPhotosFragment(cardData.offer.photos));
+
+    if (cardData.offer.features.length > 0) {
+      cardFeatures.append(getFeaturesFragment(cardData.offer.features));
+    } else {
+      cardFeatures.remove();
+    }
+
+    if (cardData.offer.description.length > 0) {
+      cardDesciption.textContent = cardData.offer.description;
+    } else {
+      cardDesciption.remove();
+    }
+
+    if (cardData.offer.photos.length > 0) {
+      cardPhotos.appendChild(getPhotosFragment(cardData.offer.photos));
+    } else {
+      cardPhotos.remove();
+    }
     return card;
   };
 
@@ -89,7 +104,7 @@
   };
 
   var cardCloseHandler = function (evt) {
-    if (window.utils.isEscPress(evt.keyCode) || window.utils.mouseLeftPress(evt.button)) {
+    if (window.utils.isEscPress(evt.keyCode) || window.utils.isMouseLeftPress(evt.button)) {
       removeCard();
     }
   };

@@ -5,6 +5,7 @@
   var offer = {
     card: null,
     pin: null,
+    cards: [],
     active: function () {
       return !!this.pin;
     },
@@ -18,9 +19,18 @@
     }
   };
 
+  var OFFER_NUMBER = 5;
+
+  var mainPinStartCoords = {
+    top: 375,
+    left: 570
+  };
+
   window.data = {
     pageIsActive: pageIsActive,
-    offer: offer
+    offer: offer,
+    mainPinStartCoords: mainPinStartCoords,
+    OFFER_NUMBER: OFFER_NUMBER
   };
 
 })();

@@ -38,11 +38,11 @@
     var sendCompleted = function () {
       if (http.status === 200) {
 
-        onSuccess();
+        onSuccess(data);
         return;
 
       }
-      onError();
+      onError(data);
     };
 
     http.addEventListener('timeout', onTimeout);

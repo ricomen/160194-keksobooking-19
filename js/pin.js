@@ -42,13 +42,15 @@
     } else {
       window.utils.activatePage(true);
       window.dnd.init(window.form.fillAddress);
-      mapPinMain.removeEventListener('mousedown', mapPinMainHandler);
-      mapPinMain.removeEventListener('keydown', mapPinMainHandler);
     }
   };
 
-  mapPinMain.addEventListener('mousedown', mapPinMainHandler);
-  mapPinMain.addEventListener('keydown', mapPinMainHandler);
+  var mainPinInit = function () {
+    mapPinMain.addEventListener('mousedown', mapPinMainHandler);
+    mapPinMain.addEventListener('keydown', mapPinMainHandler);
+  };
+
+  mainPinInit();
 
   window.pin = {
     get: getMapPinNode
