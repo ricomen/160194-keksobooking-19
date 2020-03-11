@@ -4,7 +4,8 @@
   var mapPinMain = map.querySelector('.map__pin--main');
 
   var adForm = document.querySelector('.ad-form');
-  // var adFormTitle = adForm.querySelector('#title');
+  var adFormAvatar = document.querySelector('#avatar');
+  var adFormAvatarPreview = document.querySelector('.ad-form-header__preview img');
   var adFormAddress = adForm.querySelector('#address');
   var adFormType = adForm.querySelector('#type');
   var adFormPrice = adForm.querySelector('#price');
@@ -12,13 +13,7 @@
   var adFormTimeOut = adForm.querySelector('#timeout');
   var adFormRoomNumber = adForm.querySelector('#room_number');
   var adFormCapacity = adForm.querySelector('#capacity');
-  // var adFormFeatureWifi = adForm.querySelector('#feature-wifi');
-  // var adFormFeatureDishwasher = adForm.querySelector('#feature-dishwasher');
-  // var adFormFeatureWasher = adForm.querySelector('#feature-washer');
-  // var adFormFeatureElevator = adForm.querySelector('#feature-elevator');
-  // var adFormFeatureConditioner = adForm.querySelector('#feature-conditioner');
-  // var adFormDescription = adForm.querySelector('#description');
-  // var adFormImages = adForm.querySelector('#images');
+  var adFormReset = adForm.querySelector('.ad-form__reset');
   var mapFilters = document.querySelector('.map__filters');
 
   var RoomsCounts = {
@@ -42,6 +37,8 @@
     HOUSE: 5000,
     PALACE: 10000
   };
+
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   var fillAddress = function () {
     var getMainPinCoords = function () {
@@ -81,6 +78,26 @@
 
     adFormCapacity.append(fragment);
   };
+
+  adFormAvatar.addEventListener('change', function (evt) {
+    var target = evt.target;
+    var file = target.files[0];
+    var fileName = file.name.toLowerCase();
+
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        adFormAvatarPreview.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+    }
+  });
 
   adForm.addEventListener('change', function (evt) {
     var target = evt.target;
@@ -140,7 +157,15 @@
     });
   };
 
+  var formResetHanlder = function (evt) {
+    evt.preventDefault();
+    window.map.reset();
+    initForm();
+    window.utils.togglePageState(false);
+  };
+
   adForm.addEventListener('submit', formSubmitHandler);
+  adFormReset.addEventListener('click', formResetHanlder);
 
   initForm();
 
