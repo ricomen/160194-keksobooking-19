@@ -1,7 +1,6 @@
 'use strict';
 (function () {
   var map = document.querySelector('.map');
-  // var pins = map.querySelector('.map__pins');
   var cardTpl = document.querySelector('#card').content.querySelector('.map__card');
 
   var getCard = function (data) {

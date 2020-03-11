@@ -1,5 +1,7 @@
 'use strict';
 (function () {
+  var DEBOUNCE_INTERVAL = 500;
+
   var map = document.querySelector('.map');
   var adForm = document.querySelector('.ad-form');
   var mapFilters = document.querySelector('.map__filters');
@@ -53,8 +55,6 @@
       }
     });
   };
-
-  var DEBOUNCE_INTERVAL = 500;
 
   var debounce = function (cb) {
     var lastTimeout = null;
