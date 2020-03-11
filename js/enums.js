@@ -1,14 +1,5 @@
 'use strict';
 (function () {
-  var PinSize = {
-    WIDTH: 50,
-    HEIGHT: 70
-  };
-
-  var MainPinSize = {
-    WIDTH: 65,
-    HEIGHT: 82
-  };
 
   var KeyCodes = {
     ENTER: 13,
@@ -24,10 +15,8 @@
   };
 
   window.enums = {
-    PinSize: PinSize,
-    MainPinSize: MainPinSize,
     ErrorCodes: ErrorCodes,
-    KeyCodes: KeyCodes
+    KeyCodes: KeyCodes,
   };
 
 })();

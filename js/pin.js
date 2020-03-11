@@ -8,8 +8,8 @@
     var pinNode = pinTpl.cloneNode(true);
     var img = pinNode.querySelector('img');
     var imgAltText = data.offer.title;
-    var pinX = (data.location.x - window.enums.PinSize.WIDTH / 2) + 'px';
-    var pinY = (data.location.y - window.enums.PinSize.HEIGHT) + 'px';
+    var pinX = (data.location.x - window.data.PinSize.WIDTH / 2) + 'px';
+    var pinY = (data.location.y - window.data.PinSize.HEIGHT) + 'px';
     var imgUrl = data.author.avatar;
 
     img.src = imgUrl;

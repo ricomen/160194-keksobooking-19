@@ -2,6 +2,16 @@
 (function () {
   var pageIsActive = false;
 
+  var PinSize = {
+    WIDTH: 50,
+    HEIGHT: 70
+  };
+
+  var MainPinSize = {
+    WIDTH: 65,
+    HEIGHT: 82
+  };
+
   var offer = {
     card: null,
     pin: null,
@@ -19,7 +29,9 @@
     }
   };
 
-  var OFFER_NUMBER = 5;
+  var offers = [];
+
+  var OFFERS_MAX_NUM = 5;
 
   var mainPinStartCoords = {
     top: 375,
@@ -30,7 +42,10 @@
     pageIsActive: pageIsActive,
     offer: offer,
     mainPinStartCoords: mainPinStartCoords,
-    OFFER_NUMBER: OFFER_NUMBER
+    OFFERS_MAX_NUM: OFFERS_MAX_NUM,
+    offers: offers,
+    PinSize: PinSize,
+    MainPinSize: MainPinSize,
   };
 
 })();

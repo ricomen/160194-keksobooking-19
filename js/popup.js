@@ -4,11 +4,6 @@
   var errorPopupTpl = document.querySelector('#error').content.querySelector('.error');
   var main = document.querySelector('main');
 
-  // var PopupTypes = {
-  //   ERROR: 'error',
-  //   SUCCESS: 'error',
-  // }
-
   var getPopup = function (type, cb) {
 
     var popup;
