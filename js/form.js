@@ -4,7 +4,6 @@
   var mapPinMain = map.querySelector('.map__pin--main');
 
   var adForm = document.querySelector('.ad-form');
-  // var adFormTitle = adForm.querySelector('#title');
   var adFormAddress = adForm.querySelector('#address');
   var adFormType = adForm.querySelector('#type');
   var adFormPrice = adForm.querySelector('#price');
@@ -12,13 +11,8 @@
   var adFormTimeOut = adForm.querySelector('#timeout');
   var adFormRoomNumber = adForm.querySelector('#room_number');
   var adFormCapacity = adForm.querySelector('#capacity');
-  // var adFormFeatureWifi = adForm.querySelector('#feature-wifi');
-  // var adFormFeatureDishwasher = adForm.querySelector('#feature-dishwasher');
-  // var adFormFeatureWasher = adForm.querySelector('#feature-washer');
-  // var adFormFeatureElevator = adForm.querySelector('#feature-elevator');
-  // var adFormFeatureConditioner = adForm.querySelector('#feature-conditioner');
-  // var adFormDescription = adForm.querySelector('#description');
-  // var adFormImages = adForm.querySelector('#images');
+
+  var adFormReset = adForm.querySelector('.ad-form__reset');
   var mapFilters = document.querySelector('.map__filters');
 
   var RoomsCounts = {
@@ -140,7 +134,15 @@
     });
   };
 
+  var formResetHanlder = function (evt) {
+    evt.preventDefault();
+    window.map.reset();
+    initForm();
+    window.utils.togglePageState(false);
+  };
+
   adForm.addEventListener('submit', formSubmitHandler);
+  adFormReset.addEventListener('click', formResetHanlder);
 
   initForm();
 
