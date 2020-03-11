@@ -46,8 +46,8 @@
   var fillAddress = function () {
     var getMainPinCoords = function () {
       var mapCoords = window.utils.getCoords(map);
-      var pinWidth = window.enums.MainPinSize.WIDTH;
-      var pinHeight = window.enums.MainPinSize.HEIGHT;
+      var pinWidth = window.data.MainPinSize.WIDTH;
+      var pinHeight = window.data.MainPinSize.HEIGHT;
       var pinCoordsX = Math.round(window.utils.getCoords(mapPinMain).left + pinWidth / 2 - mapCoords.left);
       var pinCoordsY = Math.round(window.utils.getCoords(mapPinMain).top + pinHeight - mapCoords.top);
 
@@ -104,6 +104,22 @@
     }
   });
 
+  var onFilterChange = window.utils.debounce(function () {
+    var filteredData = window.filter();
+    window.map.clear();
+    window.map.fill(filteredData);
+  });
+
+  mapFilters.addEventListener('change', onFilterChange);
+
+  var initForm = function () {
+    mapFilters.reset();
+    adForm.reset();
+    changeTypeMinPrice(adFormType.value);
+    changeGuestCapacity(adFormRoomNumber.value);
+    fillAddress();
+  };
+
   var formSubmitHandler = function (evt) {
     evt.preventDefault();
     var data = new FormData(adForm);
@@ -126,16 +142,7 @@
 
   adForm.addEventListener('submit', formSubmitHandler);
 
-  var initForm = function () {
-    mapFilters.reset();
-    adForm.reset();
-    changeTypeMinPrice(adFormType.value);
-    changeGuestCapacity(adFormRoomNumber.value);
-    fillAddress();
-  };
-
   initForm();
-
 
   window.form = {
     fillAddress: fillAddress

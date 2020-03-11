@@ -3,11 +3,6 @@
   var map = document.querySelector('.map');
   var mainPin = map.querySelector('.map__pin--main');
 
-  var MainPinSize = {
-    WIDTH: 65,
-    HEIGHT: 82
-  };
-
   var MapRanges = {
     VERT_MIN: 130,
     VERT_MAX: 630,
@@ -16,9 +11,6 @@
   };
 
   var init = function (cb) {
-    if (cb) {
-      var callback = cb || '';
-    }
 
     mainPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
@@ -48,7 +40,7 @@
           y: moveEvt.pageY - map.offsetTop - shift.y
         };
 
-        if (inMapRanges(MapRanges, coords, MainPinSize)) {
+        if (inMapRanges(MapRanges, coords, window.data.MainPinSize)) {
           mainPin.style.left = coords.x + 'px';
           mainPin.style.top = coords.y + 'px';
         } else {
@@ -62,8 +54,8 @@
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
 
-        if (callback) {
-          callback();
+        if (cb) {
+          cb();
         }
       };
 

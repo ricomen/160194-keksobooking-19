@@ -47,8 +47,26 @@
     window.request({
       url: 'https://js.dump.academy/keksobooking/data',
       method: 'GET',
-      onSuccess: window.map.fill
+      onSuccess: function (data) {
+        window.data.offers = data;
+        window.map.fill(data);
+      }
     });
+  };
+
+  var DEBOUNCE_INTERVAL = 500;
+
+  var debounce = function (cb) {
+    var lastTimeout = null;
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
   };
 
   window.utils = {
@@ -58,7 +76,8 @@
     activatePage: activatePage,
     isEscPress: isEscPress,
     isEnterPress: isEnterPress,
-    isMouseLeftPress: isMouseLeftPress
+    isMouseLeftPress: isMouseLeftPress,
+    debounce: debounce
   };
 
 })();
