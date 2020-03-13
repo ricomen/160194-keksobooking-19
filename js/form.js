@@ -31,7 +31,6 @@
   var adFormAvatar = document.querySelector('#avatar');
   var adFormAvatarPreview = document.querySelector('.ad-form-header__preview img');
   var adFormPhoto = document.querySelector('.ad-form__upload input[type=file]');
-  var adFormPhotoPreview = document.querySelector('.ad-form__photo');
   var adFormAddress = adForm.querySelector('#address');
   var adFormType = adForm.querySelector('#type');
   var adFormPrice = adForm.querySelector('#price');
@@ -83,9 +82,7 @@
   };
 
 
-  var getImage = function (evt, cb) {
-    var target = evt.target;
-    var file = target.files[0];
+  var getImagePreview = function (file, cb) {
     var fileName = file.name.toLowerCase();
     var matches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
@@ -105,20 +102,49 @@
   };
 
   var onAvatarHanler = function (evt) {
-    getImage(evt, function (data) {
+    var file = evt.target.files[0];
+    getImagePreview(file, function (data) {
       adFormAvatarPreview.src = data;
     });
   };
 
+  var photoContainer = document.querySelector('.ad-form__photo-container');
+
+  var getHousePhotos = function (files) {
+    var photos = Object.values(files).reduce(function (acc, file) {
+      var div = document.createElement('div');
+      var img = document.createElement('img');
+      img.width = 40;
+      img.height = 44;
+      div.append(img);
+      div.className = 'ad-form__photo';
+      getImagePreview(file, function (data) {
+        img.src = data;
+      });
+      acc.append(div);
+
+      return acc;
+    }, new DocumentFragment());
+
+    return photos;
+  };
+
   var onHousePicHanler = function (evt) {
-    adFormPhotoPreview.innerHTML = '';
-    var img = document.createElement('img');
-    img.width = 40;
-    img.height = 44;
-    getImage(evt, function (data) {
-      img.src = data;
-      adFormPhotoPreview.append(img);
-    });
+    var photos = getHousePhotos(evt.target.files);
+    photoContainer.append(photos);
+  };
+
+  var avatarReset = function () {
+    adFormAvatarPreview.src = DEFAULT_AVATAR_URL;
+  };
+
+  var housePicReset = function () {
+    var photos = adForm.querySelectorAll('.ad-form__photo');
+    if (photos) {
+      photos.forEach(function (file) {
+        file.remove();
+      });
+    }
   };
 
   adFormAvatar.addEventListener('change', onAvatarHanler);
@@ -158,6 +184,7 @@
     mapFilters.reset();
     adForm.reset();
     avatarReset();
+    housePicReset();
     changeTypeMinPrice(adFormType.value);
     changeGuestCapacity(adFormRoomNumber.value);
     fillAddress();
@@ -181,10 +208,6 @@
       },
       body: data
     });
-  };
-
-  var avatarReset = function () {
-    adFormAvatarPreview.src = DEFAULT_AVATAR_URL;
   };
 
   var formResetHanlder = function (evt) {
