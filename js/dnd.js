@@ -1,51 +1,65 @@
 'use strict';
 (function () {
+
+  var MapRanges = {
+    X: {
+      MIN: 0,
+      MAX: 1200
+    },
+    Y: {
+      MIN: 130,
+      MAX: 630
+    }
+  };
+
   var map = document.querySelector('.map');
   var mainPin = map.querySelector('.map__pin--main');
 
-  var MapRanges = {
-    VERT_MIN: 130,
-    VERT_MAX: 630,
-    HORIZ_MIN: 0,
-    HORIZ_MAX: map.clientWidth,
-  };
-
   var init = function (cb) {
-
     mainPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
 
-      var shift = {
-        x: evt.clientX - mainPin.getBoundingClientRect().left,
-        y: evt.clientY - mainPin.getBoundingClientRect().top
+      var startCoords = {
+        x: evt.clientX,
+        y: evt.clientY
       };
-
-      var coords = {
-        x: evt.pageX - map.offsetLeft - shift.x,
-        y: evt.pageY - map.offsetTop - shift.y
-      };
-
-      var inMapRanges = function (mapRanges, pinCoords, pinSize) {
-        var inVertRange = mapRanges.VERT_MIN < pinCoords.y + pinSize.HEIGHT && mapRanges.VERT_MAX > pinCoords.y + pinSize.HEIGHT;
-        var inHorizRange = mapRanges.HORIZ_MIN < pinCoords.x + pinSize.WIDTH / 2 && mapRanges.HORIZ_MAX > pinCoords.x + pinSize.WIDTH / 2;
-        return inVertRange && inHorizRange;
-      };
-
 
       var onMouseMove = function (moveEvt) {
         moveEvt.preventDefault();
 
-        coords = {
-          x: moveEvt.pageX - map.offsetLeft - shift.x,
-          y: moveEvt.pageY - map.offsetTop - shift.y
+        var shift = {
+          x: startCoords.x - moveEvt.clientX,
+          y: startCoords.y - moveEvt.clientY,
         };
 
-        if (inMapRanges(MapRanges, coords, window.data.MainPinSize)) {
-          mainPin.style.left = coords.x + 'px';
-          mainPin.style.top = coords.y + 'px';
-        } else {
-          return;
-        }
+        var newStyleLeft = parseInt(mainPin.style.left, 10) - shift.x;
+        var newStyleTop = parseInt(mainPin.style.top, 10) - shift.y;
+
+        startCoords = {
+          x: moveEvt.clientX,
+          y: moveEvt.clientY
+        };
+
+        var getPositionStyle = function (axis, newStylePosition, side) {
+          var position;
+          if (newStylePosition < (MapRanges[axis].MIN - side)) {
+
+            position = (MapRanges[axis].MIN - side) + 'px';
+            document.removeEventListener('mousemove', onMouseMove);
+
+          } else if (newStylePosition > (MapRanges[axis].MAX - side)) {
+
+            position = (MapRanges[axis].MAX - side) + 'px';
+            document.removeEventListener('mousemove', onMouseMove);
+
+          } else {
+            position = newStylePosition + 'px';
+          }
+          return position;
+        };
+
+        mainPin.style.left = getPositionStyle('X', newStyleLeft, window.data.MainPinSize.WIDTH / 2);
+        mainPin.style.top = getPositionStyle('Y', newStyleTop, window.data.MainPinSize.HEIGHT);
 
       };
 

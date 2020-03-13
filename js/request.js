@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  var STATUS_SUCCESS = 200;
   var data = [];
 
   var request = function (settings) {
@@ -11,8 +12,7 @@
     var http = new XMLHttpRequest();
 
     var loadCompleted = function () {
-      if (http.status === 200) {
-        // если в процессе запроса мы ловим ошибку, выводим окно с ошибкой на страницу.
+      if (http.status === STATUS_SUCCESS) {
         try {
           JSON.parse(http.responseText);
         } catch (e) {
@@ -36,7 +36,7 @@
     };
 
     var sendCompleted = function () {
-      if (http.status === 200) {
+      if (http.status === STATUS_SUCCESS) {
 
         onSuccess(data);
         return;
