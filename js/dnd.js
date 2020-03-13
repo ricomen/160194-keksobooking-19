@@ -23,7 +23,6 @@
         x: evt.clientX,
         y: evt.clientY
       };
-      // console.log(startCoords)
 
       var onMouseMove = function (moveEvt) {
         moveEvt.preventDefault();
@@ -33,21 +32,8 @@
           y: startCoords.y - moveEvt.clientY,
         };
 
-        var newStyleLeft = mainPin.offsetLeft - shift.x;
-        var newStyleTop = mainPin.offsetTop - shift.y;
-        mainPin.style.left = newStyleLeft + 'px';
-
-        // var newStyleLeft = parseInt(mainPin.style.left, 10) - shift.x;
-        // var newStyleTop = parseInt(mainPin.style.top, 10) - shift.y;
-        if (moveEvt.clientX - window.data.MainPinSize.WIDTH / 2 < map.getBoundingClientRect().left) {
-
-          mainPin.style.left = 0 - window.data.MainPinSize.WIDTH / 2 + 'px';
-
-        } else if (moveEvt.clientX > map.getBoundingClientRect().right) {
-
-          mainPin.style.left = MapRanges['X'].MAX + 'px';
-
-        }
+        var newStyleLeft = parseInt(mainPin.style.left, 10) - shift.x;
+        var newStyleTop = parseInt(mainPin.style.top, 10) - shift.y;
 
         startCoords = {
           x: moveEvt.clientX,
@@ -55,25 +41,25 @@
         };
 
         var getPositionStyle = function (axis, newStylePosition, side) {
-          // var position;
-          // if (newStylePosition < (MapRanges[axis].MIN - side)) {
+          var position;
+          if (newStylePosition < (MapRanges[axis].MIN - side)) {
 
-          //   position = (MapRanges[axis].MIN - side) + 'px';
-          //   // document.removeEventListener('mousemove', onMouseMove);
+            position = (MapRanges[axis].MIN - side) + 'px';
+            document.removeEventListener('mousemove', onMouseMove);
 
-          // } else if (newStylePosition > (MapRanges[axis].MAX - side)) {
+          } else if (newStylePosition > (MapRanges[axis].MAX - side)) {
 
-          //   position = (MapRanges[axis].MAX - side) + 'px';
-          //   // document.removeEventListener('mousemove', onMouseMove);
+            position = (MapRanges[axis].MAX - side) + 'px';
+            document.removeEventListener('mousemove', onMouseMove);
 
-          // } else {
-          //   position = newStylePosition + 'px';
-          // }
-          // return position;
+          } else {
+            position = newStylePosition + 'px';
+          }
+          return position;
         };
 
-        // mainPin.style.left = getPositionStyle('X', newStyleLeft, window.data.MainPinSize.WIDTH / 2);
-        // mainPin.style.top = getPositionStyle('Y', newStyleTop, window.data.MainPinSize.HEIGHT);
+        mainPin.style.left = getPositionStyle('X', newStyleLeft, window.data.MainPinSize.WIDTH / 2);
+        mainPin.style.top = getPositionStyle('Y', newStyleTop, window.data.MainPinSize.HEIGHT);
 
       };
 

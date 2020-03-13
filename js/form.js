@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   var DEFAULT_AVATAR_URL = 'img/muffin-grey.svg';
+
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var Prices = {
     BUNGALO: 0,
@@ -8,8 +9,6 @@
     HOUSE: 5000,
     PALACE: 10000
   };
-
-  var map = document.querySelector('.map');
 
   var RoomsCounts = {
     1: [1],
@@ -26,6 +25,7 @@
     3: 'для 3 гостей',
   };
 
+  var map = document.querySelector('.map');
   var mapPinMain = map.querySelector('.map__pin--main');
   var adForm = document.querySelector('.ad-form');
   var adFormAvatar = document.querySelector('#avatar');
@@ -40,7 +40,6 @@
   var adFormCapacity = adForm.querySelector('#capacity');
   var adFormReset = adForm.querySelector('.ad-form__reset');
   var mapFilters = document.querySelector('.map__filters');
-
 
   var fillAddress = function () {
     var getMainPinCoords = function () {
@@ -80,7 +79,6 @@
 
     adFormCapacity.append(fragment);
   };
-
 
   var getImagePreview = function (file, cb) {
     var fileName = file.name.toLowerCase();

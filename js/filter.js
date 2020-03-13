@@ -1,7 +1,7 @@
 'use strict';
 (function () {
-
   var DEFAULT_SELECT_VALUE = 'any';
+
   var RangeOfPrices = {
     ANY: {
       min: 0,
@@ -50,11 +50,11 @@
   var byFeatures = function (offer, value) {
     var arr1 = offer.offer.features;
     var arr2 = value;
-    var hasFeatures = arr2.every(function (val) {
+    var matchFeatures = arr2.every(function (val) {
       return arr1.indexOf(val) !== -1;
     });
 
-    return hasFeatures;
+    return matchFeatures;
   };
 
   var mapFilters = document.querySelector('.map__filters');
