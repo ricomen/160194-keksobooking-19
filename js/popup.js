@@ -42,12 +42,10 @@
     return popup;
   };
 
-
   var show = function (type, cb) {
     main.append(getPopup(type, cb));
   };
 
   window.popup = show;
-
 
 })();

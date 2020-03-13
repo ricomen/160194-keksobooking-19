@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var pageIsActive = false;
+  var OFFERS_MAX_NUM = 5;
 
   var PinSize = {
     WIDTH: 50,
@@ -8,9 +8,13 @@
   };
 
   var MainPinSize = {
-    WIDTH: 65,
+    WIDTH: 64,
     HEIGHT: 82
   };
+
+  var pageIsActive = false;
+
+  var offers = [];
 
   var offer = {
     card: null,
@@ -28,10 +32,6 @@
       this.pin = pin;
     }
   };
-
-  var offers = [];
-
-  var OFFERS_MAX_NUM = 5;
 
   var mainPinStartCoords = {
     top: 375,
