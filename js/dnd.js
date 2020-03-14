@@ -12,55 +12,87 @@
     }
   };
 
+  var MoveRanges = {
+    X: {
+      MIN: MapRanges.X.MIN - (window.data.MainPinSize.WIDTH / 2),
+      MAX: MapRanges.X.MAX - (window.data.MainPinSize.WIDTH / 2)
+    },
+    Y: {
+      MIN: MapRanges.Y.MIN - window.data.MainPinSize.HEIGHT,
+      MAX: MapRanges.Y.MAX - window.data.MainPinSize.HEIGHT
+    }
+  };
+
   var map = document.querySelector('.map');
   var mainPin = map.querySelector('.map__pin--main');
 
+
   var init = function (cb) {
+
     mainPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
-
-      var startCoords = {
-        x: evt.clientX,
-        y: evt.clientY
-      };
+      var shiftX = evt.clientX - mainPin.getBoundingClientRect().left;
+      var shiftY = evt.clientY - mainPin.getBoundingClientRect().top;
+      var isLeaveMap = false;
 
       var onMouseMove = function (moveEvt) {
         moveEvt.preventDefault();
 
-        var shift = {
-          x: startCoords.x - moveEvt.clientX,
-          y: startCoords.y - moveEvt.clientY,
+        var newCoords = {
+          x: moveEvt.clientX - shiftX - map.getBoundingClientRect().left,
+          y: moveEvt.clientY - shiftY - map.getBoundingClientRect().top
         };
 
-        var newStyleLeft = parseInt(mainPin.style.left, 10) - shift.x;
-        var newStyleTop = parseInt(mainPin.style.top, 10) - shift.y;
-
-        startCoords = {
-          x: moveEvt.clientX,
-          y: moveEvt.clientY
+        var lastCoords = {
+          x: mainPin.style.left,
+          y: mainPin.style.top,
         };
 
-        var getPositionStyle = function (axis, newStylePosition, side) {
-          var position;
-          if (newStylePosition < (MapRanges[axis].MIN - side)) {
+        var newLeft = isLeaveMap ? lastCoords.x : newCoords.x;
+        var newTop = isLeaveMap ? lastCoords.y : newCoords.y;
 
-            position = (MapRanges[axis].MIN - side) + 'px';
-            document.removeEventListener('mousemove', onMouseMove);
+        var rightEdge = MoveRanges.X.MAX;
 
-          } else if (newStylePosition > (MapRanges[axis].MAX - side)) {
+        var inMapRanges =
+          newCoords.x > MoveRanges.X.MIN &&
+          newCoords.y < MoveRanges.Y.MAX &&
+          newCoords.x < MoveRanges.X.MAX &&
+          newCoords.y > MoveRanges.Y.MIN;
 
-            position = (MapRanges[axis].MAX - side) + 'px';
-            document.removeEventListener('mousemove', onMouseMove);
+        if (inMapRanges) {
+          isLeaveMap = false;
+        }
 
-          } else {
-            position = newStylePosition + 'px';
-          }
-          return position;
-        };
+        if (newLeft < MoveRanges.X.MIN) {
 
-        mainPin.style.left = getPositionStyle('X', newStyleLeft, window.data.MainPinSize.WIDTH / 2);
-        mainPin.style.top = getPositionStyle('Y', newStyleTop, window.data.MainPinSize.HEIGHT);
+          newLeft = MoveRanges.X.MIN;
+          isLeaveMap = true;
 
+        }
+
+        if (newLeft > MoveRanges.X.MAX) {
+
+          newLeft = rightEdge;
+          isLeaveMap = true;
+
+        }
+
+        if (newTop < MoveRanges.Y.MIN) {
+
+          newTop = MoveRanges.Y.MIN;
+          isLeaveMap = true;
+
+        }
+
+        if (newTop > MoveRanges.Y.MAX) {
+
+          newTop = MoveRanges.Y.MAX;
+          isLeaveMap = true;
+
+        }
+
+        mainPin.style.left = newLeft + 'px';
+        mainPin.style.top = newTop + 'px';
       };
 
       var onMouseUp = function (upEvt) {
