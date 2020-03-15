@@ -48,11 +48,6 @@
           y: mainPin.style.top,
         };
 
-        var newLeft = isLeaveMap ? lastCoords.x : newCoords.x;
-        var newTop = isLeaveMap ? lastCoords.y : newCoords.y;
-
-        var rightEdge = MoveRanges.X.MAX;
-
         var inMapRanges =
           newCoords.x > MoveRanges.X.MIN &&
           newCoords.y < MoveRanges.Y.MAX &&
@@ -63,32 +58,35 @@
           isLeaveMap = false;
         }
 
-        if (newLeft < MoveRanges.X.MIN) {
+        var newLeft;
+        var newTop;
 
+        if (isLeaveMap) {
+          newLeft = lastCoords.x;
+          newTop = lastCoords.y;
+        } else {
+          newLeft = newCoords.x;
+          newTop = newCoords.y;
+        }
+
+        if (newLeft < MoveRanges.X.MIN) {
           newLeft = MoveRanges.X.MIN;
           isLeaveMap = true;
-
         }
 
         if (newLeft > MoveRanges.X.MAX) {
-
-          newLeft = rightEdge;
+          newLeft = MoveRanges.X.MAX;
           isLeaveMap = true;
-
         }
 
         if (newTop < MoveRanges.Y.MIN) {
-
           newTop = MoveRanges.Y.MIN;
           isLeaveMap = true;
-
         }
 
         if (newTop > MoveRanges.Y.MAX) {
-
           newTop = MoveRanges.Y.MAX;
           isLeaveMap = true;
-
         }
 
         mainPin.style.left = newLeft + 'px';
