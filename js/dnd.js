@@ -26,21 +26,69 @@
   var map = document.querySelector('.map');
   var mainPin = map.querySelector('.map__pin--main');
 
+  var isLeaveMap = false;
+
+  var getCoord = function (lastCoords, newCoords) {
+    var newLeft;
+    var newTop;
+
+    if (isLeaveMap) {
+      newLeft = lastCoords.x;
+      newTop = lastCoords.y;
+    } else {
+      newLeft = newCoords.x;
+      newTop = newCoords.y;
+    }
+
+    if (newLeft < MoveRanges.X.MIN) {
+      newLeft = MoveRanges.X.MIN;
+      isLeaveMap = true;
+    }
+
+    if (newLeft > MoveRanges.X.MAX) {
+      newLeft = MoveRanges.X.MAX;
+      isLeaveMap = true;
+    }
+
+    if (newTop < MoveRanges.Y.MIN) {
+      newTop = MoveRanges.Y.MIN;
+      isLeaveMap = true;
+    }
+
+    if (newTop > MoveRanges.Y.MAX) {
+      newTop = MoveRanges.Y.MAX;
+      isLeaveMap = true;
+    }
+
+    return {
+      x: newLeft,
+      y: newTop
+    };
+  };
+
+  var inMapRange = function (newCoords) {
+    return newCoords.x > MoveRanges.X.MIN &&
+      newCoords.y < MoveRanges.Y.MAX &&
+      newCoords.x < MoveRanges.X.MAX &&
+      newCoords.y > MoveRanges.Y.MIN;
+  };
 
   var init = function (cb) {
 
     mainPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
-      var shiftX = evt.clientX - mainPin.getBoundingClientRect().left;
-      var shiftY = evt.clientY - mainPin.getBoundingClientRect().top;
-      var isLeaveMap = false;
+      var newPosition;
+      var shift = {
+        x: evt.clientX - mainPin.getBoundingClientRect().left,
+        y: evt.clientY - mainPin.getBoundingClientRect().top
+      };
 
       var onMouseMove = function (moveEvt) {
         moveEvt.preventDefault();
 
         var newCoords = {
-          x: moveEvt.clientX - shiftX - map.getBoundingClientRect().left,
-          y: moveEvt.clientY - shiftY - map.getBoundingClientRect().top
+          x: moveEvt.clientX - shift.x - map.getBoundingClientRect().left,
+          y: moveEvt.clientY - shift.y - map.getBoundingClientRect().top
         };
 
         var lastCoords = {
@@ -48,49 +96,14 @@
           y: mainPin.style.top,
         };
 
-        var inMapRanges =
-          newCoords.x > MoveRanges.X.MIN &&
-          newCoords.y < MoveRanges.Y.MAX &&
-          newCoords.x < MoveRanges.X.MAX &&
-          newCoords.y > MoveRanges.Y.MIN;
-
-        if (inMapRanges) {
+        if (inMapRange(newCoords)) {
           isLeaveMap = false;
         }
 
-        var newLeft;
-        var newTop;
+        newPosition = getCoord(lastCoords, newCoords);
 
-        if (isLeaveMap) {
-          newLeft = lastCoords.x;
-          newTop = lastCoords.y;
-        } else {
-          newLeft = newCoords.x;
-          newTop = newCoords.y;
-        }
-
-        if (newLeft < MoveRanges.X.MIN) {
-          newLeft = MoveRanges.X.MIN;
-          isLeaveMap = true;
-        }
-
-        if (newLeft > MoveRanges.X.MAX) {
-          newLeft = MoveRanges.X.MAX;
-          isLeaveMap = true;
-        }
-
-        if (newTop < MoveRanges.Y.MIN) {
-          newTop = MoveRanges.Y.MIN;
-          isLeaveMap = true;
-        }
-
-        if (newTop > MoveRanges.Y.MAX) {
-          newTop = MoveRanges.Y.MAX;
-          isLeaveMap = true;
-        }
-
-        mainPin.style.left = newLeft + 'px';
-        mainPin.style.top = newTop + 'px';
+        mainPin.style.left = newPosition.x + 'px';
+        mainPin.style.top = newPosition.y + 'px';
       };
 
       var onMouseUp = function (upEvt) {
