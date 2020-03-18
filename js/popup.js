@@ -4,7 +4,7 @@
   var errorPopupTpl = document.querySelector('#error').content.querySelector('.error');
   var main = document.querySelector('main');
 
-  var getPopup = function (type, cb) {
+  var getPopup = function (type, callback) {
 
     var popup;
     if (type === 'error') {
@@ -31,8 +31,8 @@
         document.removeEventListener('click', popupHandler);
         document.removeEventListener('keydown', popupHandler);
         popup.remove();
-        if (cb) {
-          cb();
+        if (callback) {
+          callback();
         }
       };
 
@@ -42,8 +42,8 @@
     return popup;
   };
 
-  var show = function (type, cb) {
-    main.append(getPopup(type, cb));
+  var show = function (type, callback) {
+    main.append(getPopup(type, callback));
   };
 
   window.popup = show;

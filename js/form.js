@@ -80,7 +80,7 @@
     adFormCapacity.append(fragment);
   };
 
-  var getImagePreview = function (file, cb) {
+  var getImagePreview = function (file, callback) {
     var fileName = file.name.toLowerCase();
     var matches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
@@ -90,8 +90,8 @@
       var reader = new FileReader();
 
       reader.addEventListener('load', function () {
-        if (cb) {
-          cb(reader.result);
+        if (callback) {
+          callback(reader.result);
         }
       });
 

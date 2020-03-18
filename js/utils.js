@@ -56,7 +56,7 @@
     });
   };
 
-  var debounce = function (cb) {
+  var debounce = function (callback) {
     var lastTimeout = null;
     return function () {
       var parameters = arguments;
@@ -64,7 +64,7 @@
         window.clearTimeout(lastTimeout);
       }
       lastTimeout = window.setTimeout(function () {
-        cb.apply(null, parameters);
+        callback.apply(null, parameters);
       }, DEBOUNCE_INTERVAL);
     };
   };

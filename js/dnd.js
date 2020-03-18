@@ -73,7 +73,7 @@
       newCoords.y > MoveRanges.Y.MIN;
   };
 
-  var init = function (cb) {
+  var init = function (callback) {
 
     mainPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
@@ -111,8 +111,8 @@
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
 
-        if (cb) {
-          cb();
+        if (callback) {
+          callback();
         }
       };
 
